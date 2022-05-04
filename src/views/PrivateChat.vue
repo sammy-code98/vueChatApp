@@ -205,6 +205,8 @@
           <div class="type_msg">
             <div class="input_msg_write">
               <input
+                v-model="message"
+                @keyup.enter="saveMessage"
                 type="text"
                 class="write_msg"
                 placeholder="Type a message"
@@ -216,13 +218,30 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 <script>
+import { ref } from "vue";
+import { collection, addDoc } from "firebase/firestore";
+
 export default {
-  setup() {},
+  setup() {
+    async function saveMessage() {
+      try {
+        const docRef = await addDoc(collection(db, "chat"), {
+          message: this.message,
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
+    return {
+      message: ref(null),
+      saveMessage,
+    };
+  },
 };
 </script>
 
