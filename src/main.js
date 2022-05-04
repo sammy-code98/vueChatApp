@@ -3,7 +3,10 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
+// Required for side-effects
+require("firebase/firestore");
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBP-Qh4vje-zx4M6H2GET6Dd66P1IMJmIk",
@@ -16,5 +19,10 @@ const firebaseConfig = {
 
 // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+
+  // Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
+// make db globally accessible
+window.db=db
 
 createApp(App).use(store).use(router).mount("#app");
