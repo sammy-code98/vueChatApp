@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h3 class="text-center">Messaging</h3>
+    <h3 class="text-center mt-4 mb-6">VueChat</h3>
     <div class="messaging">
       <div class="inbox_msg">
         <div class="inbox_people">
@@ -144,7 +144,11 @@
         <div class="mesgs">
           <div class="msg_history">
             <div class="incoming_msg">
-              <div class="incoming_msg_img">
+              <div
+                v-for="message in messages"
+                :key="message.id"
+                class="incoming_msg_img"
+              >
                 <img
                   src="https://ptetutorials.com/images/user-profile.png"
                   alt="sunil"
@@ -152,52 +156,8 @@
               </div>
               <div class="received_msg">
                 <div class="received_withd_msg">
-                  <p>Test which is a new approach to have all solutions</p>
+                  <p>{{ message }}</p>
                   <span class="time_date"> 11:01 AM | June 9</span>
-                </div>
-              </div>
-            </div>
-            <div class="outgoing_msg">
-              <div class="sent_msg">
-                <p>Test which is a new approach to have all solutions</p>
-                <span class="time_date"> 11:01 AM | June 9</span>
-              </div>
-            </div>
-            <div class="incoming_msg">
-              <div class="incoming_msg_img">
-                <img
-                  src="https://ptetutorials.com/images/user-profile.png"
-                  alt="sunil"
-                />
-              </div>
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>Test, which is a new approach to have</p>
-                  <span class="time_date"> 11:01 AM | Yesterday</span>
-                </div>
-              </div>
-            </div>
-            <div class="outgoing_msg">
-              <div class="sent_msg">
-                <p>Apollo University, Delhi, India Test</p>
-                <span class="time_date"> 11:01 AM | Today</span>
-              </div>
-            </div>
-            <div class="incoming_msg">
-              <div class="incoming_msg_img">
-                <img
-                  src="https://ptetutorials.com/images/user-profile.png"
-                  alt="sunil"
-                />
-              </div>
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>
-                    We work directly with our designers and suppliers, and sell
-                    direct to you, which means quality, exclusive products, at a
-                    price anyone can afford.
-                  </p>
-                  <span class="time_date"> 11:01 AM | Today</span>
                 </div>
               </div>
             </div>
@@ -205,6 +165,8 @@
           <div class="type_msg">
             <div class="input_msg_write">
               <input
+                v-model="message"
+                @keyup.enter="saveMessage"
                 type="text"
                 class="write_msg"
                 placeholder="Type a message"
@@ -216,13 +178,49 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 <script>
+import { ref, onMounted } from "vue";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+
 export default {
-  setup() {},
+  setup() {
+    async function saveMessage() {
+      try {
+        const docRef = await addDoc(collection(db, "chat"), {
+          message: this.message,
+        });
+        this.message = null;
+        // console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
+
+    async function fetchMessage() {
+      let allMessages = [];
+
+      const querySnapshot = await getDocs(collection(db, "chat"));
+      // create variables
+      querySnapshot.forEach((doc) => {
+        allMessages.push(doc.data());
+        console.log(`${doc.id} => ${doc.data()}`);
+      });
+      // set all message to the allMessages array once the loop is done
+      this.messages = allMessages;
+    }
+    // this should have been in the created lifecyle hook in optionsApi
+    // this.fetchMessage();
+
+    return {
+      message: ref(null),
+      saveMessage,
+      fetchMessage,
+      messages: ref([]),
+    };
+  },
 };
 </script>
 
