@@ -204,18 +204,20 @@ export default {
       const querySnapshot = await getDocs(collection(db, "chat"));
       // create variables
       querySnapshot.forEach((doc) => {
-        // allMessages.push(doc.data());
-        allMessages.push(`${doc.id} => ${doc.data()}`);
+        allMessages.push(doc.data());
         // console.log(`${doc.id} => ${doc.data()}`);
+              this.messages = allMessages;
+
       });
 
       // set all message to the allMessages array once the loop is done
-      this.messages = allMessages;
     }
 
     // this should have been in the created lifecyle hook in optionsApi
     // this.fetchMessage();
-
+    onMounted(() => {
+      this.fetchMessage();
+    });
     return {
       message: ref(null),
       saveMessage,
