@@ -205,7 +205,8 @@ export default {
       // create variables
       querySnapshot.forEach((doc) => {
         allMessages.push(doc.data());
-        // console.log(`${doc.id} => ${doc.data()}`);
+        console.log(`${doc.id} => ${doc.data()}`);
+        console.log('doc data:', doc.data());
               this.messages = allMessages;
 
       });
@@ -216,7 +217,7 @@ export default {
     // this should have been in the created lifecyle hook in optionsApi
     // this.fetchMessage();
     onMounted(() => {
-      this.fetchMessage();
+      fetchMessage();
     });
     return {
       message: ref(null),
