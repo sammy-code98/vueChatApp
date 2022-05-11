@@ -143,12 +143,12 @@
         </div>
         <div class="mesgs">
           <div class="msg_history">
-            <div class="incoming_msg">
-              <div
-                v-for="message in messages"
-                :key="message.id"
-                class="incoming_msg_img"
-              >
+            <div
+              class="incoming_msg"
+              v-for="message in messages"
+              :key="message.id"
+            >
+              <div class="incoming_msg_img">
                 <img
                   src="https://ptetutorials.com/images/user-profile.png"
                   alt="sunil"
@@ -157,6 +157,7 @@
               <div class="received_msg">
                 <div class="received_withd_msg">
                   <p>{{ message }}</p>
+
                   <span class="time_date"> 11:01 AM | June 9</span>
                 </div>
               </div>
@@ -193,7 +194,6 @@ export default {
           message: this.message,
         });
         this.message = null;
-        // console.log("Document written with ID: ", docRef.id);
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -204,23 +204,25 @@ export default {
       const querySnapshot = await getDocs(collection(db, "chat"));
       // create variables
       querySnapshot.forEach((doc) => {
-        // allMessages.push(doc.data());
-        allMessages.push(`${doc.id} => ${doc.data()}`);
-        // console.log(`${doc.id} => ${doc.data()}`);
+        allMessages.push({
+          id: doc.id,
+          message: doc.data().message,
+        });
       });
+      console.log(allMessages);
 
-      // set all message to the allMessages array once the loop is done
-      this.messages = allMessages;
+      // return  the allMessages array once the loop is done
+      return  this.messages = allMessages;
     }
 
-    // this should have been in the created lifecyle hook in optionsApi
-    // this.fetchMessage();
-
+    onMounted(() => {
+      fetchMessage();
+    });
     return {
       message: ref(null),
       saveMessage,
-      fetchMessage,
-      messages: ref([]),
+      allMessages: ref([]),
+      messages: ref(["hello", "jjjuj", "loloo", 'lele']),
     };
   },
 };
