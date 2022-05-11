@@ -143,12 +143,12 @@
         </div>
         <div class="mesgs">
           <div class="msg_history">
-            <div class="incoming_msg">
-              <div
-                v-for="message in messages"
-                :key="message.id"
-                class="incoming_msg_img"
-              >
+            <div
+              class="incoming_msg"
+              v-for="message in messages"
+              :key="message.id"
+            >
+              <div class="incoming_msg_img">
                 <img
                   src="https://ptetutorials.com/images/user-profile.png"
                   alt="sunil"
@@ -156,7 +156,7 @@
               </div>
               <div class="received_msg">
                 <div class="received_withd_msg">
-                  <p>{{ messages }}</p>
+                  <p>{{ message }}</p>
 
                   <span class="time_date"> 11:01 AM | June 9</span>
                 </div>
@@ -194,7 +194,6 @@ export default {
           message: this.message,
         });
         this.message = null;
-        // console.log("Document written with ID: ", docRef.id);
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -207,10 +206,8 @@ export default {
       querySnapshot.forEach((doc) => {
         allMessages.push({
           id: doc.id,
-          messages: doc.data(),
-          date: doc.data().date,
+          message: doc.data().message,
         });
-        // console.log(`${doc.id} => ${doc.data()}`);
       });
       console.log(allMessages);
 
@@ -224,9 +221,8 @@ export default {
     return {
       message: ref(null),
       saveMessage,
-      fetchMessage,
       allMessages: ref([]),
-      messages: ref(['lle'])
+      messages: ref(["hello", "jjjuj", "loloo", 'lele']),
     };
   },
 };
