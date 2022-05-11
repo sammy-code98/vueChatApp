@@ -145,7 +145,7 @@
           <div class="msg_history">
             <div class="incoming_msg">
               <div
-                v-for="message in allMessages"
+                v-for="message in messages"
                 :key="message.id"
                 class="incoming_msg_img"
               >
@@ -156,7 +156,8 @@
               </div>
               <div class="received_msg">
                 <div class="received_withd_msg">
-                  <p>{{ message }}</p>
+                  <p>{{ messages }}</p>
+
                   <span class="time_date"> 11:01 AM | June 9</span>
                 </div>
               </div>
@@ -204,23 +205,19 @@ export default {
       const querySnapshot = await getDocs(collection(db, "chat"));
       // create variables
       querySnapshot.forEach((doc) => {
-        // allMessages.push(`${doc.id} => ${doc.data()}`)
         allMessages.push({
           id: doc.id,
-          message: doc.data().message,
+          messages: doc.data(),
+          date: doc.data().date,
         });
         // console.log(`${doc.id} => ${doc.data()}`);
-        // console.log("doc data:", doc.data());
       });
       console.log(allMessages);
 
-      // set all message to the allMessages array once the loop is done
-      // this.message = allMessages;
-      return allMessages;
+      // return  the allMessages array once the loop is done
+      return  this.messages = allMessages;
     }
 
-    // this should have been in the created lifecyle hook in optionsApi
-    // this.fetchMessage();
     onMounted(() => {
       fetchMessage();
     });
@@ -228,8 +225,8 @@ export default {
       message: ref(null),
       saveMessage,
       fetchMessage,
-      messages: ref([]),
       allMessages: ref([]),
+      messages: ref(['lle'])
     };
   },
 };
