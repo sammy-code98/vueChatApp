@@ -212,8 +212,8 @@ export default {
       console.log(allMessages);
 
       // return  the allMessages array once the loop is done
-      return  this.messages = allMessages;
-    }
+      return this.message = allMessages;
+    };
 
     onMounted(() => {
       fetchMessage();
@@ -222,7 +222,7 @@ export default {
       message: ref(null),
       saveMessage,
       allMessages: ref([]),
-      messages: ref(["hello", "jjjuj", "loloo", 'lele']),
+      messages: ref(["hello", "jjjuj", "loloo", "lele"]),
     };
   },
 };
