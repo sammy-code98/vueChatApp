@@ -156,7 +156,7 @@
               </div>
               <div class="received_msg">
                 <div class="received_withd_msg">
-                  <p>{{ message }}</p>
+                  <p>{{ message.message }}</p>
 
                   <span class="time_date"> 11:01 AM | June 9</span>
                 </div>
@@ -188,12 +188,16 @@ import { collection, addDoc, getDocs } from "firebase/firestore";
 
 export default {
   setup() {
+    const allMessages = ref([]);
+    const messages = ref([]);
+    const message = ref(null);
+
     async function saveMessage() {
       try {
         const docRef = await addDoc(collection(db, "chat"), {
-          message: this.message,
+          message: message.value,
         });
-        this.message = null;
+        message.value = null;
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -209,21 +213,16 @@ export default {
           message: doc.data().message,
         });
       });
-      console.log(allMessages);
+      // console.log("allMessages:", allMessages);
 
       // return  the allMessages array once the loop is done
-      return this.message = allMessages;
-    };
+      messages.value = allMessages;
+    }
 
     onMounted(() => {
       fetchMessage();
     });
-    return {
-      message: ref(null),
-      saveMessage,
-      allMessages: ref([]),
-      messages: ref(["hello", "jjjuj", "loloo", "lele"]),
-    };
+    return { saveMessage, message, allMessages, messages };
   },
 };
 </script>
