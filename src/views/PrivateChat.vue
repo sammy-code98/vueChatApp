@@ -253,23 +253,24 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 1170px;
+  /* max-width: 1170px; */
   margin: auto;
 }
 img {
   max-width: 100%;
 }
 .inbox_people {
-  background: #f8f8f8 none repeat scroll 0 0;
+  background: #e5e8e8 none repeat scroll 0 0;
   float: left;
   overflow: hidden;
   width: 40%;
-  border-right: 1px solid #c4c4c4;
+  border-right: 1px solid #e5e8e8;
 }
 .inbox_msg {
-  border: 1px solid #c4c4c4;
+  border: 1px solid #e5e8e8;
   clear: both;
   overflow: hidden;
+  border-radius: 12px;
 }
 .top_spac {
   margin: 20px 0 0;
@@ -278,6 +279,7 @@ img {
 .recent_heading {
   float: left;
   width: 40%;
+
 }
 .srch_bar {
   display: inline-block;
@@ -287,16 +289,17 @@ img {
 .headind_srch {
   padding: 10px 29px 10px 20px;
   overflow: hidden;
-  border-bottom: 1px solid #c4c4c4;
+  border-bottom: 1px solid #e5e8e8;
 }
 
 .recent_heading h4 {
-  color: #05728f;
+  color: #151339;
   font-size: 21px;
   margin: auto;
+  font-weight: bold;
 }
 .srch_bar input {
-  border: 1px solid #cdcdcd;
+  border: 1px solid #e5e8e8;
   border-width: 0 0 1px 0;
   width: 80%;
   padding: 2px 0 4px 6px;
@@ -306,7 +309,7 @@ img {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
   border: medium none;
   padding: 0;
-  color: #707070;
+  color: #151339;
   font-size: 18px;
 }
 .srch_bar .input-group-addon {
@@ -367,7 +370,7 @@ img {
 }
 .received_withd_msg p {
   background: #ebebeb none repeat scroll 0 0;
-  border-radius: 3px;
+  border-radius: 8px;
   color: #646464;
   font-size: 14px;
   margin: 0;
