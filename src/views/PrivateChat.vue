@@ -184,7 +184,14 @@
 </template>
 <script>
 import { ref, onMounted } from "vue";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  orderBy,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
 
 export default {
   setup() {
@@ -196,27 +203,44 @@ export default {
       try {
         const docRef = await addDoc(collection(db, "chat"), {
           message: message.value,
+          createdAt: new Date(),
         });
         message.value = null;
       } catch (e) {
         console.error("Error adding document: ", e);
       }
     }
+// ### this method here shows data only on reload
+    // async function fetchMessage() {
+    //   let allMessages = [];
+    //   const q = query(collection(db, "chat"), orderBy('createdAt'));
+    //   const querySnapshot = await getDocs(q);
+    //   // create variables
+    //   querySnapshot.forEach((doc) => {
+    //     allMessages.push({
+    //       id: doc.id,
+    //       message: doc.data().message,
+    //     });
+    //   });
+    //   // console.log("allMessages:", allMessages);
 
+    //   // return  the allMessages array once the loop is done
+    //   messages.value = allMessages;
+    // }
+
+    // ### use the onsnapshot here to show data in real time
     async function fetchMessage() {
       let allMessages = [];
-      const querySnapshot = await getDocs(collection(db, "chat"));
-      // create variables
-      querySnapshot.forEach((doc) => {
-        allMessages.push({
-          id: doc.id,
-          message: doc.data().message,
+      const q = query(collection(db, "chat"), orderBy("createdAt"));
+      onSnapshot(q, (snap) => {
+        snap.forEach((doc) => {
+          allMessages.push({
+            id: doc.id,
+            message: doc.data().message,
+          });
         });
+        messages.value = allMessages;
       });
-      // console.log("allMessages:", allMessages);
-
-      // return  the allMessages array once the loop is done
-      messages.value = allMessages;
     }
 
     onMounted(() => {
@@ -229,23 +253,24 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 1170px;
+  /* max-width: 1170px; */
   margin: auto;
 }
 img {
   max-width: 100%;
 }
 .inbox_people {
-  background: #f8f8f8 none repeat scroll 0 0;
+  background: #e5e8e8 none repeat scroll 0 0;
   float: left;
   overflow: hidden;
   width: 40%;
-  border-right: 1px solid #c4c4c4;
+  border-right: 1px solid #e5e8e8;
 }
 .inbox_msg {
-  border: 1px solid #c4c4c4;
+  border: 1px solid #e5e8e8;
   clear: both;
   overflow: hidden;
+  border-radius: 12px;
 }
 .top_spac {
   margin: 20px 0 0;
@@ -254,6 +279,7 @@ img {
 .recent_heading {
   float: left;
   width: 40%;
+
 }
 .srch_bar {
   display: inline-block;
@@ -263,16 +289,17 @@ img {
 .headind_srch {
   padding: 10px 29px 10px 20px;
   overflow: hidden;
-  border-bottom: 1px solid #c4c4c4;
+  border-bottom: 1px solid #e5e8e8;
 }
 
 .recent_heading h4 {
-  color: #05728f;
+  color: #151339;
   font-size: 21px;
   margin: auto;
+  font-weight: bold;
 }
 .srch_bar input {
-  border: 1px solid #cdcdcd;
+  border: 1px solid #e5e8e8;
   border-width: 0 0 1px 0;
   width: 80%;
   padding: 2px 0 4px 6px;
@@ -282,7 +309,7 @@ img {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
   border: medium none;
   padding: 0;
-  color: #707070;
+  color: #151339;
   font-size: 18px;
 }
 .srch_bar .input-group-addon {
@@ -343,7 +370,7 @@ img {
 }
 .received_withd_msg p {
   background: #ebebeb none repeat scroll 0 0;
-  border-radius: 3px;
+  border-radius: 8px;
   color: #646464;
   font-size: 14px;
   margin: 0;
