@@ -184,7 +184,13 @@
 </template>
 <script>
 import { ref, onMounted } from "vue";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
 
 export default {
   setup() {
@@ -196,6 +202,7 @@ export default {
       try {
         const docRef = await addDoc(collection(db, "chat"), {
           message: message.value,
+          createdAt: new Date(),
         });
         message.value = null;
       } catch (e) {
@@ -205,7 +212,8 @@ export default {
 
     async function fetchMessage() {
       let allMessages = [];
-      const querySnapshot = await getDocs(collection(db, "chat"));
+      const q = query(collection(db, "chat"), orderBy('createdAt'));
+      const querySnapshot = await getDocs(q);
       // create variables
       querySnapshot.forEach((doc) => {
         allMessages.push({
