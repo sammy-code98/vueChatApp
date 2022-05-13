@@ -190,6 +190,7 @@ import {
   getDocs,
   orderBy,
   query,
+  onSnapshot,
 } from "firebase/firestore";
 
 export default {
@@ -209,22 +210,37 @@ export default {
         console.error("Error adding document: ", e);
       }
     }
+// ### this method here shows data only on reload
+    // async function fetchMessage() {
+    //   let allMessages = [];
+    //   const q = query(collection(db, "chat"), orderBy('createdAt'));
+    //   const querySnapshot = await getDocs(q);
+    //   // create variables
+    //   querySnapshot.forEach((doc) => {
+    //     allMessages.push({
+    //       id: doc.id,
+    //       message: doc.data().message,
+    //     });
+    //   });
+    //   // console.log("allMessages:", allMessages);
 
+    //   // return  the allMessages array once the loop is done
+    //   messages.value = allMessages;
+    // }
+
+    // ### use the onsnapshot here to show data in real time
     async function fetchMessage() {
       let allMessages = [];
-      const q = query(collection(db, "chat"), orderBy('createdAt'));
-      const querySnapshot = await getDocs(q);
-      // create variables
-      querySnapshot.forEach((doc) => {
-        allMessages.push({
-          id: doc.id,
-          message: doc.data().message,
+      const q = query(collection(db, "chat"), orderBy("createdAt"));
+      onSnapshot(q, (snap) => {
+        snap.forEach((doc) => {
+          allMessages.push({
+            id: doc.id,
+            message: doc.data().message,
+          });
         });
+        messages.value = allMessages;
       });
-      // console.log("allMessages:", allMessages);
-
-      // return  the allMessages array once the loop is done
-      messages.value = allMessages;
     }
 
     onMounted(() => {
