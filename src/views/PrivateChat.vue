@@ -184,7 +184,10 @@
 </template>
 <script>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+
 import {
+
   collection,
   addDoc,
   getDocs,
@@ -194,10 +197,25 @@ import {
 } from "firebase/firestore";
 
 export default {
+  // navigation guard
+  // beforeRouteEnter(to, from, next) {
+  //   next((vm) => {
+  //     // access to component public instance via `vm`
+  //     firebase.auth().onAuthStateChanged(user =>{
+  //       if(user){
+  //         // if user exist, go to next request
+  //         next()
+  //       }else{
+  //         router.push('/login')
+  //       }
+  //     });
+  //   });
+  // },
   setup() {
     const allMessages = ref([]);
     const messages = ref([]);
     const message = ref(null);
+    const router = useRouter()
 
     async function saveMessage() {
       try {
@@ -210,7 +228,7 @@ export default {
         console.error("Error adding document: ", e);
       }
     }
-// ### this method here shows data only on reload
+    // ### this method here shows data only on reload
     // async function fetchMessage() {
     //   let allMessages = [];
     //   const q = query(collection(db, "chat"), orderBy('createdAt'));
@@ -246,6 +264,7 @@ export default {
     onMounted(() => {
       fetchMessage();
     });
+
     return { saveMessage, message, allMessages, messages };
   },
 };
@@ -279,7 +298,6 @@ img {
 .recent_heading {
   float: left;
   width: 40%;
-
 }
 .srch_bar {
   display: inline-block;
