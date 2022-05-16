@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h3>Please Log In with your Google account to continue</h3>
     <button @click="login">Login with Google</button>
   </div>
@@ -7,9 +7,13 @@
 
 <script>
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
+    //   intitailzie router
+    const router = useRouter();
+
     function login() {
       //    initialze provider
       const provider = new GoogleAuthProvider();
@@ -26,7 +30,7 @@ export default {
           const user = result.user;
           // ... if success redirect user to main component
 
-          this.$router.push("/");
+          router.push("/");
         })
         .catch((error) => {
           // Handle Errors here.
@@ -43,3 +47,28 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  margin: auto;
+  padding-top: 100px;
+}
+h3 {
+  color: #151339;
+  font-size: 21px;
+  margin: auto;
+  font-weight: bold;
+}
+button {
+  margin-top: 50px;
+  border-radius: 8px;
+  padding: 15px;
+  font-weight: bold;
+  border: 1px solid #e5e8e8;
+  cursor: pointer;
+}
+button:hover {
+  background: #151339;
+  color: #e5e8e8;
+}
+</style>
