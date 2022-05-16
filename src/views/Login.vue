@@ -10,7 +10,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 export default {
   setup() {
-    const login = () => {
+    function login() {
       //    initialze provider
       const provider = new GoogleAuthProvider();
       //   this line is optional
@@ -26,7 +26,7 @@ export default {
           const user = result.user;
           // ... if success redirect user to main component
 
-          this.$router.push("/")
+          this.$router.push("/");
         })
         .catch((error) => {
           // Handle Errors here.
@@ -38,7 +38,8 @@ export default {
           const credential = GoogleAuthProvider.credentialFromError(error);
           // ...
         });
-    };
+    }
+    return { login };
   },
 };
 </script>
