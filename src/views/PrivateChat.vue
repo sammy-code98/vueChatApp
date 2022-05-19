@@ -216,6 +216,7 @@ export default {
     const messages = ref([]);
     const message = ref(null);
     const router = useRouter()
+    
 
     async function saveMessage() {
       try {
@@ -263,9 +264,11 @@ export default {
 
     onMounted(() => {
       fetchMessage();
-    });
+      
+    })
+    
 
-    return { saveMessage, message, allMessages, messages };
+    return { saveMessage, message, allMessages, messages,fetchMessage };
   },
 };
 </script>
