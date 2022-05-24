@@ -185,6 +185,8 @@
 <script>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import firebase from "firebase/app";
+import { getAuth } from "firebase/auth";
 
 import {
   collection,
@@ -197,19 +199,21 @@ import {
 
 export default {
   // navigation guard
-  // beforeRouteEnter(to, from, next) {
-  //   next((vm) => {
-  //     // access to component public instance via `vm`
-  //     firebase.auth().onAuthStateChanged(user =>{
-  //       if(user){
-  //         // if user exist, go to next request
-  //         next()
-  //       }else{
-  //         router.push('/login')
-  //       }
-  //     });
-  //   });
-  // },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      const auth = getAuth();
+
+      // access to component public instance via `vm`
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // if user exist, go to next request
+          next("/private-chat");
+        } else {
+          router.push("/login");
+        }
+      });
+    });
+  },
   setup() {
     const allMessages = ref([]);
     const messages = ref([]);
