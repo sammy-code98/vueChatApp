@@ -187,7 +187,6 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 import {
-
   collection,
   addDoc,
   getDocs,
@@ -215,8 +214,7 @@ export default {
     const allMessages = ref([]);
     const messages = ref([]);
     const message = ref(null);
-    const router = useRouter()
-    
+    const router = useRouter();
 
     async function saveMessage() {
       try {
@@ -264,11 +262,9 @@ export default {
 
     onMounted(() => {
       fetchMessage();
-      
-    })
-    
+    });
 
-    return { saveMessage, message, allMessages, messages,fetchMessage };
+    return { saveMessage, message, allMessages, messages, fetchMessage };
   },
 };
 </script>
