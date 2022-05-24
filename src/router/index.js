@@ -3,13 +3,13 @@ import PrivateChat from "../views/PrivateChat.vue";
 import Login from "../views/Login.vue";
 
 const routes = [
-  { path: "/", name: "privateChat", component: PrivateChat },
+  { path: "/private-chat", name: "privateChat", component: PrivateChat },
   {
     path: "/login",
     name: "Login",
     component: Login,
-  
   },
+  { path: "/:pathMatch(.*)*", redirect: "/login" },
 ];
 
 const router = createRouter({

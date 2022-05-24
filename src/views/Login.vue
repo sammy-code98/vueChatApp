@@ -30,7 +30,7 @@ export default {
           const user = result.user;
           // ... if success redirect user to main component
 
-          router.push("/");
+          router.push("/private-chat");
         })
         .catch((error) => {
           // Handle Errors here.
