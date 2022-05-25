@@ -154,12 +154,18 @@
                   alt="sunil"
                 />
               </div>
-              <div class="received_msg">
+              <div
+                :class="[
+                  message.author === authUser.displayName
+                    ? 'sent_msg'
+                    : 'received_msg',
+                ]"
+              >
                 <div class="received_withd_msg">
                   <p>{{ message.message }}</p>
-
-                  <span class="time_date">{{message.createdAt}}  {{ message.author }}</span>
-                  <!-- <span>auth:{{message}}</span> -->
+                  <span class="time_date"
+                    >{{ message.createdAt }}, {{ message.author }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -189,7 +195,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   addDoc,
-  getDocs,
   orderBy,
   query,
   onSnapshot,
@@ -208,7 +213,9 @@ export default {
           message: message.value,
           author: authUser,
           createdAt: new Date(),
-
+        }).then(() => {
+          // call the scroll bottom fucntion once a user sends a message
+          scrollBottom();
         });
         message.value = null;
       } catch (e) {
@@ -242,12 +249,21 @@ export default {
           allMessages.push({
             id: doc.id,
             message: doc.data().message,
-            createdAt:doc.data().createdAt,
+            createdAt: doc.data().createdAt.toDate().toDateString(),
             author: doc.data().author,
           });
         });
         messages.value = allMessages;
+        setTimeout(() => {
+          scrollBottom();
+        }, 1000);
       });
+    }
+
+    // scroll to bottom
+    function scrollBottom() {
+      let box = document.querySelector(".msg_history");
+      box.scrollTop = box.scrollHeight;
     }
 
     onMounted(() => {
@@ -271,6 +287,7 @@ export default {
       messages,
       fetchMessage,
       authUser,
+      scrollBottom,
     };
   },
 };
@@ -417,7 +434,7 @@ img {
 }
 
 .sent_msg p {
-  background: #05728f none repeat scroll 0 0;
+  background: #151339 none repeat scroll 0 0;
   border-radius: 3px;
   font-size: 14px;
   margin: 0;
