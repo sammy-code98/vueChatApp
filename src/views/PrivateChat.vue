@@ -158,7 +158,8 @@
                 <div class="received_withd_msg">
                   <p>{{ message.message }}</p>
 
-                  <span class="time_date"> 11:01 AM | June 9</span>
+                  <span class="time_date">{{message.createdAt}}  {{ message.author }}</span>
+                  <!-- <span>auth:{{message}}</span> -->
                 </div>
               </div>
             </div>
@@ -184,10 +185,7 @@
 </template>
 <script>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import firebase from "firebase/app";
-import { getAuth } from "firebase/auth";
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -198,33 +196,19 @@ import {
 } from "firebase/firestore";
 
 export default {
-  // navigation guard
-  // beforeRouteEnter(to, from, next) {
-  //   next((vm) => {
-  //     const auth = getAuth();
-
-  //     // access to component public instance via `vm`
-  //     firebase.auth().onAuthStateChanged((user) => {
-  //       if (user) {
-  //         // if user exist, go to next request
-  //         next("/private-chat");
-  //       } else {
-  //         router.push("/login");
-  //       }
-  //     });
-  //   });
-  // },
   setup() {
     const allMessages = ref([]);
     const messages = ref([]);
     const message = ref(null);
-    const router = useRouter();
+    let authUser = ref({});
 
     async function saveMessage() {
       try {
         const docRef = await addDoc(collection(db, "chat"), {
           message: message.value,
+          author: authUser,
           createdAt: new Date(),
+
         });
         message.value = null;
       } catch (e) {
@@ -258,6 +242,8 @@ export default {
           allMessages.push({
             id: doc.id,
             message: doc.data().message,
+            createdAt:doc.data().createdAt,
+            author: doc.data().author,
           });
         });
         messages.value = allMessages;
@@ -265,10 +251,27 @@ export default {
     }
 
     onMounted(() => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          authUser = user.displayName;
+        } else {
+          authUser = {};
+        }
+      });
       fetchMessage();
     });
 
-    return { saveMessage, message, allMessages, messages, fetchMessage };
+    return {
+      saveMessage,
+      message,
+      allMessages,
+      messages,
+      fetchMessage,
+      authUser,
+    };
   },
 };
 </script>
